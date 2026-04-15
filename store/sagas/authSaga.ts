@@ -2,10 +2,14 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { api } from "@/lib/api";
 import { authActions } from "../slices/authSlice";
 
-function* loginSaga(action: any): Generator<any, void, any> {
+function* loginSaga(action: {
+  type: string;
+  payload: { username: string; password: string };
+}): Generator<any, void, any> {
   try {
     const { username, password } = action.payload;
 
+    // API CALL
     const response = yield call(() =>
       api.post("/auth/login", {
         username,
@@ -15,13 +19,29 @@ function* loginSaga(action: any): Generator<any, void, any> {
 
     const data = response.data;
 
-    // save token in localStorage
-    localStorage.setItem("token", data.token);
+    // Extract user object
+    const user = {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      image: data.image,
+    };
 
+    const token = data.token;
+
+    // persist auth
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    document.cookie = `token=${token}; path=/`;
+
+    // Redux update
     yield put(
       authActions.loginSuccess({
-        user: data,
-        token: data.token,
+        user,
+        token,
       })
     );
   } catch (error: any) {

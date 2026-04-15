@@ -1,7 +1,11 @@
-import React from 'react'
+"use client";
 
-export default function Signup() {
+import SignupForm from "@/components/auth/SignupForm";
+
+export default function SignupPage() {
   return (
-    <div><h1>Signup</h1></div>
-  )
+    <div className="flex items-center justify-center min-h-screen">
+      <SignupForm />
+    </div>
+  );
 }
