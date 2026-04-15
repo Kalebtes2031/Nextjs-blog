@@ -1,3 +1,4 @@
+import { Send } from "lucide-react";
 import React from "react";
 
 type ButtonProps = {
@@ -6,6 +7,7 @@ type ButtonProps = {
   type?: "button" | "submit";
   loading?: boolean;
   variant?: "primary" | "danger" | "success";
+  showSendIcon?: boolean;
 };
 
 export default function Button({
@@ -14,8 +16,9 @@ export default function Button({
   type = "button",
   loading = false,
   variant = "primary",
+  showSendIcon = false,
 }: ButtonProps) {
-  const base = "px-4 py-2 rounded-full text-white cursor-pointer";
+  const base = "flex justify-center items-center gap-2 px-4 py-2 rounded-full text-white cursor-pointer";
 
   const styles = {
     primary: "bg-blue-900",
@@ -31,6 +34,7 @@ export default function Button({
       className={`${base} ${styles[variant]} opacity-${loading ? "50" : "100"}`}
     >
       {loading ? "Loading..." : children}
+      {showSendIcon && <Send size={14} />}
     </button>
   );
 }

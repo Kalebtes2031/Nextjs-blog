@@ -23,7 +23,7 @@ export default function PostList() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 py-12">
       {/* Header Section */}
       <div className="mb-10 border-b border-gray-100 pb-6">
         <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">

@@ -17,6 +17,7 @@ export async function generateMetadata({
 }
 
 import PostDetail from "@/components/blog/PostDetail/PostDetail";
+import CommentSection from "@/components/blog/CommentSection/CommentSection";
 
 export default async function Page({
   params,
@@ -25,5 +26,5 @@ export default async function Page({
 }) {
   const { id } = await params;
 
-  return <PostDetail id={id} />;
+  return <><PostDetail id={id} /><CommentSection postId={Number(id)} /></>;
 }

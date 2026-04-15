@@ -4,6 +4,7 @@ import createSagaMiddleware from "redux-saga";
 import authReducer from "./slices/authSlice";
 import postsReducer from "./slices/postsSlice";
 import uiReducer from "./slices/uiSlice";
+import commentsReducer from "./slices/commentsSlice";
 
 import rootSaga from "./sagas";
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     auth: authReducer,
     posts: postsReducer,
     ui: uiReducer,
+    comments: commentsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),

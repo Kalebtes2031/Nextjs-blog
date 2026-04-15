@@ -57,7 +57,7 @@ export default function PostDetail({ id }: { id: string }) {
   }
 
   return (
-    <article className="min-h-screen bg-white">
+    <article className="h-auto bg-white mt-12">
       {/* Sticky Header Actions */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
