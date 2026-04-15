@@ -1,9 +1,10 @@
-import React from 'react'
+export const metadata = {
+  title: "Blog Page",
+  description: "List of all blog posts",
+};
 
-export default function Blog() {
-  return (
-    <div className='center-flex'>
-        <h1 className='heading'>Blog Page</h1>
-    </div>
-  )
+import PostList from "@/components/blog/PostList/PostList";
+
+export default function Page() {
+  return <PostList />;
 }

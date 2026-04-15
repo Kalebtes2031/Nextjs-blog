@@ -41,15 +41,22 @@ const postsSlice = createSlice({
 
     fetchPostsSuccess: (
       state,
-      action: PayloadAction<{ posts: Post[]; total: number }>
+      action: PayloadAction<{ posts: Post[]; total: number; page: number }>
     ) => {
       state.loading = false;
+      const { posts, total, page } = action.payload;
 
-      // append for pagination
-      state.posts = [...state.posts, ...action.payload.posts];
-      state.total = action.payload.total;
+      if (page === 1) {
+        state.posts = posts;
+      } else {
+        // Append unique posts only
+        const existingIds = new Set(state.posts.map((p) => p.id));
+        const uniqueNewPosts = posts.filter((p) => !existingIds.has(p.id));
+        state.posts = [...state.posts, ...uniqueNewPosts];
+      }
 
-      state.hasMore = state.posts.length < action.payload.total;
+      state.total = total;
+      state.hasMore = state.posts.length < total;
     },
 
     fetchPostsFailure: (state, action: PayloadAction<string>) => {

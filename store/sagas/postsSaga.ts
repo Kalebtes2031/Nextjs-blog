@@ -18,6 +18,7 @@ function* fetchPostsSaga(action: any): Generator<any, void, any> {
       postsActions.fetchPostsSuccess({
         posts: response.data.posts,
         total: response.data.total,
+        page,
       })
     );
   } catch (error: any) {
