@@ -1,48 +1,46 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { api } from "@/lib/api";
+import { commentsService } from "@/lib/commentsService";
 import { commentsActions } from "../slices/commentsSlice";
+import { toast } from "react-hot-toast";
 
-// FETCH COMMENTS
-function* fetchCommentsSaga(action: any): Generator<any, void, any> {
+function* fetchCommentsSaga(action: {
+  type: string;
+  payload: number;
+}): Generator<any, void, any> {
   try {
     const postId = action.payload;
+    const data = yield call(commentsService.getCommentsByPostId, postId);
 
-    const response = yield call(() =>
-      api.get(`/posts/${postId}/comments`)
+    yield put(commentsActions.fetchCommentsSuccess(data.comments));
+  } catch (error: any) {
+    yield put(
+      commentsActions.fetchCommentsFailure("Failed to fetch comments")
     );
-
-    yield put(commentsActions.fetchCommentsSuccess(response.data.comments));
-  } catch (error) {
-    yield put(commentsActions.fetchCommentsFailure("Failed to load comments"));
+    toast.error("Failed to load comments");
   }
 }
 
-// ADD COMMENT (fake API behavior)
-function* addCommentSaga(action: any): Generator<any, void, any> {
+function* addCommentSaga(action: {
+  type: string;
+  payload: { postId: number; body: string };
+}): Generator<any, void, any> {
   try {
     const { postId, body } = action.payload;
-
-    const newComment = {
-      id: Date.now(),
-      body,
+    const data = yield call(commentsService.addComment, {
       postId,
-      user: { username: "you" },
-    };
+      body,
+      userId: 1, // Mock user ID, in real app would come from auth state
+    });
 
-    yield put(commentsActions.addCommentSuccess(newComment));
-  } catch (error) {
-    yield put(commentsActions.fetchCommentsFailure("Failed to add comment"));
+    yield put(commentsActions.addCommentSuccess(data));
+    toast.success("Comment added!");
+  } catch (error: any) {
+    yield put(commentsActions.addCommentFailure("Failed to add comment"));
+    toast.error("Failed to add comment");
   }
 }
 
-export default function* commentsSaga() {
-  yield takeLatest(
-    commentsActions.fetchCommentsRequest.type,
-    fetchCommentsSaga
-  );
-
-  yield takeLatest(
-    commentsActions.addCommentRequest.type,
-    addCommentSaga
-  );
+export default function* commentsSaga(): Generator<any, void, any> {
+  yield takeLatest(commentsActions.fetchCommentsRequest.type, fetchCommentsSaga);
+  yield takeLatest(commentsActions.addCommentRequest.type, addCommentSaga);
 }

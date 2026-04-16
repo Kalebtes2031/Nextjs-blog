@@ -4,8 +4,11 @@ export interface Post {
   id: number;
   title: string;
   body: string;
-  tags: string[];
-  reactions: number;
+  tags?: string[];
+  reactions?: {
+    likes: number;
+    dislikes: number;
+  };
   userId: number;
 }
 
@@ -93,6 +96,63 @@ const postsSlice = createSlice({
     },
 
     createPostFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // SEARCH POSTS
+    searchPostsRequest: (state, _action: PayloadAction<string>) => {
+      state.loading = true;
+      state.error = null;
+    },
+
+    searchPostsSuccess: (state, action: PayloadAction<Post[]>) => {
+      state.loading = false;
+      state.posts = action.payload;
+    },
+
+    searchPostsFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // UPDATE POST
+    updatePostRequest: (
+      state,
+      _action: PayloadAction<{ id: number; data: Partial<Post> }>
+    ) => {
+      state.loading = true;
+    },
+
+    updatePostSuccess: (state, action: PayloadAction<Post>) => {
+      state.loading = false;
+      state.posts = state.posts.map((p) =>
+        p.id === action.payload.id ? action.payload : p
+      );
+      if (state.selectedPost?.id === action.payload.id) {
+        state.selectedPost = action.payload;
+      }
+    },
+
+    updatePostFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // DELETE POST
+    deletePostRequest: (state, _action: PayloadAction<number>) => {
+      state.loading = true;
+    },
+
+    deletePostSuccess: (state, action: PayloadAction<number>) => {
+      state.loading = false;
+      state.posts = state.posts.filter((p) => p.id !== action.payload);
+      if (state.selectedPost?.id === action.payload) {
+        state.selectedPost = null;
+      }
+    },
+
+    deletePostFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },

@@ -54,6 +54,10 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
     },
 
+    logoutRequest: (state) => {
+      // Just a trigger for saga
+    },
+
     logout: (state) => {
       state.user = null;
       state.token = null;

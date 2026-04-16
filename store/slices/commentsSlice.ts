@@ -50,6 +50,11 @@ const commentsSlice = createSlice({
       state.comments.unshift(action.payload);
       state.loading = false;
     },
+
+    addCommentFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
