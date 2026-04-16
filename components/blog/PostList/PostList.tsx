@@ -11,7 +11,7 @@ import {
   selectPostsError,
   selectHasMorePosts
 } from "@/store/selectors/postsSelectors";
-import { Loader2, AlertCircle, Sparkles } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 // Wait, 'lucide-center' doesn't exist. It was a typo in my previous turn or the original code. I'll use 'lucide-react'.
 
 import { Sparkles as SparklesIcon } from "lucide-react";

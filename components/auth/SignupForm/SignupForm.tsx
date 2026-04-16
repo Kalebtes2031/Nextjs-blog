@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
-import ErrorMessage from "@/components/common/ErrorMessage/ErrorMessage";
 import { Lock, User, Mail, UserPlus } from "lucide-react";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import { toast } from "react-hot-toast";

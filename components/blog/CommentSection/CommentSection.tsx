@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { commentsActions } from "@/store/slices/commentsSlice";
 import { useAuth } from "@/hooks/useAuth";
 import Button from "@/components/common/Button/Button";
-import { MessageSquare, Send, User, Loader2, Sparkles } from "lucide-react";
+import { MessageSquare, Send, Loader2 } from "lucide-react";
 
 export default function CommentSection({ postId }: { postId: number }) {
   const dispatch = useAppDispatch();

@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { postsActions } from "@/store/slices/postsSlice";
 import { useAuth } from "@/hooks/useAuth";
 import { 
-  User, 
   LogOut, 
   LayoutDashboard, 
   Search, 

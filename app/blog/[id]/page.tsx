@@ -28,7 +28,7 @@ export async function generateMetadata({
         description: post.body?.slice(0, 150),
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Blog Post | Blog",
     };

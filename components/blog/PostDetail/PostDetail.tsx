@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { postsActions } from "@/store/slices/postsSlice";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Calendar, Clock, Share2, Bookmark, User, Tag, ThumbsUp } from "lucide-react";
+import { ChevronLeft, Share2, Bookmark, Tag } from "lucide-react";
 import { DetailSkeleton } from "../../common/Loader/Skeleton";
 
 export default function PostDetail({ id }: { id: string }) {
@@ -32,7 +32,7 @@ export default function PostDetail({ id }: { id: string }) {
           <AlertCircle className="text-red-500 dark:text-red-400" size={32} />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Post not found</h2>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">The article you're looking for might have been moved or deleted.</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">The article you&apos;re looking for might have been moved or deleted.</p>
         <button 
           onClick={() => router.back()}
           className="mt-6 px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full hover:scale-105 active:scale-95 transition-all"
