@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Blog Page",
-  description: "List of all blog posts",
+  title: "Insights & Articles | Blog",
+  description: "Explore the latest technology trends and architectural insights from our professional engineering consultants.",
 };
 
 import PostList from "@/components/blog/PostList/PostList";

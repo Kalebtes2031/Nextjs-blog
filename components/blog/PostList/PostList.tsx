@@ -4,13 +4,26 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { postsActions } from "@/store/slices/postsSlice";
 import PostCard from "../PostCard/PostCard";
-import { Loader2, AlertCircle } from "lucide-react"; 
+import { PostSkeleton } from "../../common/Loader/Skeleton";
+import {
+  selectAllPosts,
+  selectPostsLoading,
+  selectPostsError,
+  selectHasMorePosts
+} from "@/store/selectors/postsSelectors";
+import { Loader2, AlertCircle, Sparkles } from "lucide-react";
+// Wait, 'lucide-center' doesn't exist. It was a typo in my previous turn or the original code. I'll use 'lucide-react'.
+
+import { Sparkles as SparklesIcon } from "lucide-react";
 
 export default function PostList() {
   const dispatch = useAppDispatch();
-  const { posts, loading, error, hasMore } = useAppSelector(
-    (state) => state.posts
-  );
+
+  // Using professional selectors
+  const posts = useAppSelector(selectAllPosts);
+  const loading = useAppSelector(selectPostsLoading);
+  const error = useAppSelector(selectPostsError);
+  const hasMore = useAppSelector(selectHasMorePosts);
 
   const [page, setPage] = useState(1);
 
@@ -23,60 +36,72 @@ export default function PostList() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 py-12">
+    <section className="max-w-7xl font-sans mx-auto px-4 mt-6 sm:px-6 lg:px-8 py-12">
       {/* Header Section */}
-      <div className="mb-10 border-b border-gray-100 pb-6">
-        <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-          Blog
-        </h1>
+      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 overflow-hidden">
+        <div className="relative">
+          <div className="absolute -top-6 -left-6 w-24 h-24 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-60"></div>
+          <h1 className="text-4xl md:text-5xl mb-1 font-black text-gray-900 dark:text-white tracking-tighter">
+            Blog
+          </h1>
+        </div>
       </div>
 
       {/* Error State */}
       {error && (
-        <div className="mb-8 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-center">
-          <AlertCircle className="text-red-500 mr-3" size={20} />
-          <p className="text-red-700 font-medium">{error}</p>
+        <div className="mb-12 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-2xl flex items-center shadow-sm">
+          <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 dark:text-red-400 mr-4 flex-shrink-0">
+            <AlertCircle size={20} />
+          </div>
+          <p className="text-red-700 dark:text-red-400 font-bold">{error}</p>
         </div>
       )}
 
       {/* Responsive Grid */}
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
-          <div key={post.id} className="transition-transform duration-300 hover:-translate-y-1">
-            <PostCard post={post} />
-          </div>
+          <PostCard key={post.id} post={post} />
         ))}
 
         {/* Loading Skeletons */}
-        {loading && 
-          Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="animate-pulse bg-gray-100 rounded-xl h-64 w-full" />
+        {loading &&
+          Array.from({ length: 6 }).map((_, i) => (
+            <PostSkeleton key={`skeleton-${i}`} />
           ))
         }
       </div>
 
       {/* Empty State */}
       {!loading && posts.length === 0 && !error && (
-        <div className="text-center py-20">
-          <p className="text-gray-400 text-xl">No posts found.</p>
+        <div className="text-center py-32 bg-gray-50 dark:bg-gray-900/30 rounded-3xl border-2 border-dashed border-gray-100 dark:border-gray-800">
+          <div className="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-400 mb-6">
+            <SparklesIcon size={32} />
+          </div>
+          <p className="text-gray-400 dark:text-gray-500 text-xl font-bold">No stories match your search.</p>
+          <p className="text-gray-400 dark:text-gray-600 mt-2">Try adjusting your filters or search terms.</p>
         </div>
       )}
 
       {/* Load More Action */}
-      {hasMore && (
-        <div className="mt-16 flex justify-center">
+      {hasMore && posts.length > 0 && (
+        <div className="mt-20 flex justify-center">
           <button
             onClick={loadMore}
             disabled={loading}
-            className="inline-flex font-sans items-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-blue-900 hover:bg-blue-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full overflow-hidden hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200 dark:shadow-none disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
-                <Loader2 className="animate-spin mr-2" size={20} />
-                Loading...
+                <Loader2 className="animate-spin" size={20} />
+                Building more...
               </>
             ) : (
-              "Load More Stories"
+              <>
+                Load More Stories
+                <div className="w-6 h-6 bg-white/20 dark:bg-gray-900/10 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                  <SparklesIcon size={12} />
+                </div>
+              </>
             )}
           </button>
         </div>

@@ -1,3 +1,7 @@
+import PostDetail from "@/components/blog/PostDetail/PostDetail";
+import CommentSection from "@/components/blog/CommentSection/CommentSection";
+import Script from "next/script";
+
 export async function generateMetadata({
   params,
 }: {
@@ -5,19 +9,31 @@ export async function generateMetadata({
 }) {
   const { id } = await params;
 
-  const res = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${id}`
-  );
-  const post = await res.json();
+  try {
+    const res = await fetch(`https://dummyjson.com/posts/${id}`);
+    const post = await res.json();
 
-  return {
-    title: post.title,
-    description: post.body?.slice(0, 150),
-  };
+    return {
+      title: `${post.title} | Blog`,
+      description: post.body?.slice(0, 150),
+      openGraph: {
+        title: post.title,
+        description: post.body?.slice(0, 150),
+        type: "article",
+        url: `https://yourdomain.com/blog/${id}`,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description: post.body?.slice(0, 150),
+      },
+    };
+  } catch (error) {
+    return {
+      title: "Blog Post | Blog",
+    };
+  }
 }
-
-import PostDetail from "@/components/blog/PostDetail/PostDetail";
-import CommentSection from "@/components/blog/CommentSection/CommentSection";
 
 export default async function Page({
   params,
@@ -26,5 +42,33 @@ export default async function Page({
 }) {
   const { id } = await params;
 
-  return <><PostDetail id={id} /><CommentSection postId={Number(id)} /></>;
+  // Fetch post data for JSON-LD (Search engine optimization)
+  const res = await fetch(`https://dummyjson.com/posts/${id}`);
+  const post = await res.json();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.body?.slice(0, 150),
+    author: {
+      "@type": "Person",
+      name: `User ${post.userId}`,
+    },
+    datePublished: new Date().toISOString(), // Mock date
+  };
+
+  return (
+    <>
+      <Script
+        id="json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="pt-20 pb-12">
+        <PostDetail id={id} />
+        <CommentSection postId={Number(id)} />
+      </div>
+    </>
+  );
 }
